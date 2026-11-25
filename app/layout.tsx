@@ -4,7 +4,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'VELOR Private Estates — Beyond the Address',
-  description: 'A considered collection of exceptional residences, selected for their architecture, character and extraordinary sense of place.',
+  description: 'Explore the VELOR architectural collection, discover exceptional destinations and begin a discreet private conversation.',
   applicationName: 'VELOR Private Estates',
   generator: 'v0.app',
   icons: {

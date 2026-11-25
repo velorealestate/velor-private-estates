@@ -2,21 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { ArrowDown, ArrowRight, ArrowUpRight, Menu, X } from 'lucide-react'
-
-const images = {
-  hero: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-04.jfif-9MLr5iu8FrwKR3tx3sbdJ30doJkqR7.jpeg',
-  tropicalEstate: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-1.2.jfif-6zEewxPnxAzZADCGp8UuzvaJTn5ngX.jpeg',
-  penthouse: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-07.jfif-B18eCzK2ooWXsDEvR9wQ0OOvvJhtVI.jpeg',
-  mountainResidence: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-03.jfif-4YLIRYXtJsPTfGtIQytm3pPRv35Tzk.jpeg',
-  stair: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-1.4.jfif-YdUgHJpS9FWH54RuzELl9dCmM9dttQ.jpeg',
-  tropicalCourtyard: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-1.1.jfif-0EzuFuXdyUS6Z8m9qQTF7OcpqGETET.jpeg',
-  entrance: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-09.jfif-eT5ywRTtmYSDY4z2LZJYiOHP4U0EmH.jpeg',
-  coastline: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-1.0.jfif-Fkp7TettaHZ8EMYW6kAUcW7ILWS7q0.jpeg',
-  city: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202026-11-18%20at%2013.47.06-tojP5DMzIqHf0lmfGqawNz5zNhpdjX.jpeg',
-  tower: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-06.jfif-G3OfBJCwGVcfXV8Dhq4E6M26srSAtV.jpeg',
-  material: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-1.3.jfif-f7zBXj0kuxZrfGtmFSopEe8JPRwqqZ.jpeg',
-  blueHour: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-02.jfif-nKHXNyhdReQWmpBBx27cASAnnkkO31.jpeg',
-}
+import { destinations, images, residences, stories } from '@/components/velor-content'
+import { VelorExperienceLayer, type VelorExperience } from '@/components/velor-experience'
 
 const navigation = [
   { label: 'The collection', href: '#collection' },
@@ -47,7 +34,16 @@ function ArrowLink({ children, href, className = '' }: { children: React.ReactNo
   )
 }
 
-function SiteHeader() {
+function ExperienceLink({ children, onClick, className = '' }: { children: React.ReactNode; onClick: () => void; className?: string }) {
+  return (
+    <button className={`arrow-link experience-link ${className}`} type="button" onClick={onClick}>
+      <span>{children}</span>
+      <ArrowRight aria-hidden="true" size={15} strokeWidth={1.2} />
+    </button>
+  )
+}
+
+function SiteHeader({ onOpenExperience }: { onOpenExperience: (next: VelorExperience) => void }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -128,20 +124,36 @@ function SiteHeader() {
               <X aria-hidden="true" size={23} strokeWidth={1.1} />
             </button>
           </div>
-          <nav className="menu-overlay-links" aria-label="Full-screen navigation">
-            {navigation.map((item, index) => (
-              <a href={item.href} key={item.href} onClick={closeMenu}>
-                <span className="menu-number">0{index + 1}</span>
-                <span>{item.label}</span>
+          <div className="menu-overlay-grid">
+            <nav className="menu-overlay-links" aria-label="Full-screen navigation">
+              {navigation.map((item, index) => (
+                <a href={item.href} key={item.href} onClick={closeMenu}>
+                  <span className="menu-number">0{index + 1}</span>
+                  <span>{item.label}</span>
+                  <ArrowUpRight aria-hidden="true" size={23} strokeWidth={1} />
+                </a>
+              ))}
+              <button
+                className="menu-enquiry-link"
+                type="button"
+                onClick={() => {
+                  closeMenu()
+                  onOpenExperience({ kind: 'enquiry', enquiryType: 'consultation' })
+                }}
+              >
+                <span className="menu-number">05</span>
+                <span>Private enquiries</span>
                 <ArrowUpRight aria-hidden="true" size={23} strokeWidth={1} />
-              </a>
-            ))}
-            <a href="#private-invitation" onClick={closeMenu}>
-              <span className="menu-number">05</span>
-              <span>Private enquiries</span>
-              <ArrowUpRight aria-hidden="true" size={23} strokeWidth={1} />
-            </a>
-          </nav>
+              </button>
+            </nav>
+            <figure className="menu-feature image-frame">
+              <img src={images.hero} alt="A contemporary residence at blue hour, opening onto a reflecting pool." loading="lazy" />
+              <figcaption>
+                <Eyebrow className="eyebrow-bronze">The living gallery</Eyebrow>
+                <span>Architecture, considered<br />beyond the address.</span>
+              </figcaption>
+            </figure>
+          </div>
           <p className="menu-signoff">Beyond the address.</p>
         </div>
       )}
@@ -154,7 +166,6 @@ function Hero() {
     <section className="hero" id="top" aria-labelledby="hero-title">
       <img className="hero-image" src={images.hero} alt="A modern glass residence at blue hour, its warm interior reflected in an infinity pool beside a wooded shoreline." fetchPriority="high" />
       <div className="hero-scrim" aria-hidden="true" />
-      <SiteHeader />
       <div className="hero-content page-gutter">
         <Eyebrow className="hero-eyebrow">A different perspective on private property</Eyebrow>
         <h1 id="hero-title">Beyond the<br /><em>address.</em></h1>
@@ -174,7 +185,7 @@ function Hero() {
 
 function Philosophy() {
   return (
-    <section className="philosophy section-ivory" id="philosophy" aria-labelledby="philosophy-title">
+    <section className="philosophy section-ivory" id="philosophy" tabIndex={-1} aria-labelledby="philosophy-title">
       <div className="philosophy-grid page-gutter">
         <div className="philosophy-aside">
           <Eyebrow>Our point of view</Eyebrow>
@@ -204,44 +215,50 @@ function Philosophy() {
 }
 
 function PropertyFeature({
-  number,
-  name,
-  descriptor,
-  image,
-  alt,
+  residence,
   className,
-  detail,
+  onOpenExperience,
 }: {
-  number: string
-  name: string
-  descriptor: string
-  image: string
-  alt: string
+  residence: (typeof residences)[number]
   className: string
-  detail: string
+  onOpenExperience: (next: VelorExperience) => void
 }) {
   return (
-    <article className={`property-feature ${className}`}>
-      <a className="property-image image-frame" href="#private-invitation" aria-label={`Enquire about ${name}`}>
-        <img loading="lazy" src={image} alt={alt} />
-        <span className="image-index">{number} &nbsp; / &nbsp; VELOR COLLECTION</span>
+    <article className={`property-feature ${className}`} data-reveal>
+      <button
+        className="property-image image-frame"
+        type="button"
+        onClick={() => onOpenExperience({ kind: 'residence', slug: residence.slug })}
+        aria-label={`Discover ${residence.name}`}
+      >
+        <img loading="lazy" src={residence.image} alt={residence.alt} />
+        <span className="image-index">{residence.number} &nbsp; / &nbsp; VELOR COLLECTION</span>
         <span className="image-discover" aria-hidden="true"><ArrowUpRight size={20} strokeWidth={1} /></span>
-      </a>
+      </button>
       <div className="property-caption">
         <div>
-          <Eyebrow>{descriptor}</Eyebrow>
-          <h3>{name}</h3>
+          <Eyebrow>{residence.descriptor}</Eyebrow>
+          <h3>{residence.name}</h3>
         </div>
-        <p>{detail}</p>
+        <p>{residence.summary}</p>
       </div>
+      <button
+        className="property-gallery-link"
+        type="button"
+        onClick={() => onOpenExperience({ kind: 'gallery', title: residence.name, images: residence.gallery })}
+      >
+        Explore gallery <ArrowUpRight aria-hidden="true" size={15} strokeWidth={1.1} />
+      </button>
     </article>
   )
 }
 
-function Collection() {
+function Collection({ onOpenExperience }: { onOpenExperience: (next: VelorExperience) => void }) {
+  const featureClasses = ['property-estate', 'property-residence', 'property-sanctuary']
+
   return (
     <section className="collection section-obsidian" id="collection" aria-labelledby="collection-title">
-      <div className="collection-heading page-gutter">
+      <div className="collection-heading page-gutter" data-reveal>
         <div><Eyebrow className="eyebrow-bronze">A curated collection / 001—003</Eyebrow><span className="section-number section-number-dark">02</span></div>
         <div className="collection-title-block">
           <h2 id="collection-title">Exceptional residences.<br /><em>Individually considered.</em></h2>
@@ -249,121 +266,127 @@ function Collection() {
         </div>
       </div>
       <div className="collection-grid page-gutter">
-        <PropertyFeature
-          number="001"
-          name="The Estate"
-          descriptor="Tropical / Private estate"
-          image={images.tropicalEstate}
-          alt="Aerial view of a sprawling contemporary stone estate, gardens and swimming pools within a lush tropical canopy."
-          className="property-estate"
-          detail="An exceptional private residence with extraordinary architectural presence."
-        />
-        <PropertyFeature
-          number="002"
-          name="The Residence"
-          descriptor="Urban / Panoramic living"
-          image={images.penthouse}
-          alt="A serene ivory penthouse living room with sculptural seating and floor-to-ceiling views across the city."
-          className="property-residence"
-          detail="A sophisticated urban home shaped by light, proportion and a remarkable view."
-        />
-        <PropertyFeature
-          number="003"
-          name="The Sanctuary"
-          descriptor="Alpine / Private retreat"
-          image={images.mountainResidence}
-          alt="A contemporary glass and stone residence nestled beneath a dramatic mountain range at dusk."
-          className="property-sanctuary"
-          detail="A secluded contemporary retreat in dialogue with its natural landscape."
-        />
+        {residences.map((residence, index) => (
+          <PropertyFeature
+            key={residence.slug}
+            residence={residence}
+            className={featureClasses[index]}
+            onOpenExperience={onOpenExperience}
+          />
+        ))}
       </div>
-      <div className="collection-foot page-gutter"><span>Illustrative collection / not available listings</span><ArrowLink href="#private-invitation">Explore the collection</ArrowLink></div>
+      <div className="collection-foot page-gutter">
+        <span>Illustrative collection / not available listings</span>
+        <ExperienceLink onClick={() => onOpenExperience({ kind: 'residence', slug: residences[0].slug })}>Explore the collection</ExperienceLink>
+      </div>
     </section>
   )
 }
 
-function ArtOfPlace() {
+function ArtOfPlace({ onOpenExperience }: { onOpenExperience: (next: VelorExperience) => void }) {
+  const openGallery = (initialIndex: number) => onOpenExperience({
+    kind: 'gallery',
+    title: 'The art of place',
+    images: residences[0].gallery,
+    initialIndex,
+  })
+
   return (
     <section className="art-of-place section-ivory" id="art-of-place" aria-labelledby="art-title">
-      <div className="art-head page-gutter">
+      <div className="art-head page-gutter" data-reveal>
         <div className="art-index"><Eyebrow>Material / atmosphere / craft</Eyebrow><span className="section-number">03</span></div>
         <div className="art-headline"><h2 id="art-title">The art<br />of <em>place.</em></h2><p>Architecture is more than the arrangement of space. It is the relationship between light, material, landscape and the experience of living.</p></div>
       </div>
-      <div className="art-gallery page-gutter">
+      <div className="art-gallery page-gutter" data-reveal>
         <figure className="art-image art-image-large image-frame">
           <img loading="lazy" src={images.tropicalCourtyard} alt="A contemporary tropical residence of pale stone and glass framed by palms, with a still reflecting pool." />
           <figcaption><span>01 / The conversation with landscape</span><span>Water / glass / canopy</span></figcaption>
+          <button className="art-image-open" type="button" onClick={() => openGallery(1)} aria-label="Open the architectural gallery">
+            <ArrowUpRight aria-hidden="true" size={17} strokeWidth={1.1} />
+          </button>
         </figure>
         <figure className="art-image art-image-small image-frame">
           <img loading="lazy" src={images.entrance} alt="A curved limestone entrance with a deep cantilever, dark vertical screen and warm timber door at dusk." />
           <figcaption><span>02 / Threshold</span><span>Stone / shadow</span></figcaption>
+          <button className="art-image-open" type="button" onClick={() => openGallery(2)} aria-label="Open the architectural gallery">
+            <ArrowUpRight aria-hidden="true" size={17} strokeWidth={1.1} />
+          </button>
         </figure>
-        <div className="art-note"><span className="art-note-mark" aria-hidden="true" /><Eyebrow>Details worth a closer look</Eyebrow><p>Travertine, bespoke joinery, quiet bronze and the precision of a considered threshold.</p><span className="art-note-index">A study in materiality &nbsp; / &nbsp; 03</span></div>
+        <div className="art-note" data-reveal><span className="art-note-mark" aria-hidden="true" /><Eyebrow>Details worth a closer look</Eyebrow><p>Travertine, bespoke joinery, quiet bronze and the precision of a considered threshold.</p><span className="art-note-index">A study in materiality &nbsp; / &nbsp; 03</span></div>
         <figure className="art-image art-image-detail image-frame">
-          <img loading="lazy" src={images.material} alt="Sculptural white modern architecture with curved forms and a lush garden, seen in soft evening light." />
+          <img loading="lazy" src={images.material} alt="Sculptural contemporary architecture shaped by a lush garden, seen in soft evening light." />
           <figcaption><span>03 / Form held in landscape</span><span>Stone / foliage</span></figcaption>
+          <button className="art-image-open" type="button" onClick={() => openGallery(3)} aria-label="Open the architectural gallery">
+            <ArrowUpRight aria-hidden="true" size={17} strokeWidth={1.1} />
+          </button>
         </figure>
       </div>
     </section>
   )
 }
 
-function Destinations() {
+function Destinations({ onOpenExperience }: { onOpenExperience: (next: VelorExperience) => void }) {
+  const [nairobi, ...otherDestinations] = destinations
+
   return (
     <section className="destinations section-obsidian" id="destinations" aria-labelledby="destinations-title">
-      <div className="destination-heading page-gutter">
+      <div className="destination-heading page-gutter" data-reveal>
         <div><Eyebrow className="eyebrow-bronze">An atlas of exceptional living</Eyebrow><span className="section-number section-number-dark">04</span></div>
         <div><h2 id="destinations-title">Places that inspire<br />a different <em>way of living.</em></h2><p>Distinctive residences are inseparable from the character of the places around them.</p></div>
       </div>
-      <div className="destination-feature page-gutter">
+      <div className="destination-feature page-gutter" data-reveal>
         <figure className="destination-main image-frame">
-          <img loading="lazy" src={images.city} alt="Panoramic Nairobi skyline with the Ngong Hills, Sarit Centre, Westgate Mall and Nairobi Expressway marked in the distance." />
-          <figcaption><span>Nairobi / In relation</span><span>City / landscape / connection</span></figcaption>
+          <img loading="lazy" src={nairobi.image} alt={nairobi.alt} />
+          <figcaption><span>{nairobi.name} / In relation</span><span>City / landscape / connection</span></figcaption>
+          <button className="art-image-open" type="button" onClick={() => onOpenExperience({ kind: 'destination', slug: nairobi.slug })} aria-label="Explore Nairobi">
+            <ArrowUpRight aria-hidden="true" size={17} strokeWidth={1.1} />
+          </button>
         </figure>
         <div className="destination-caption">
-          <Eyebrow className="eyebrow-bronze">01 / Nairobi, Kenya</Eyebrow>
+          <Eyebrow className="eyebrow-bronze">{nairobi.number} / {nairobi.location}</Eyebrow>
           <h3>Rooted in place.<br /><em>Open to the world.</em></h3>
-          <p>A city of layered horizons, green neighbourhoods and a rare closeness to the landscape beyond its edge.</p>
-          <ArrowLink href="#private-invitation">Discover Nairobi</ArrowLink>
+          <p>{nairobi.introduction}</p>
+          <ExperienceLink onClick={() => onOpenExperience({ kind: 'destination', slug: nairobi.slug })}>Discover Nairobi</ExperienceLink>
         </div>
       </div>
-      <div className="destination-secondary page-gutter">
-        <a href="#private-invitation" className="destination-teaser">
-          <img loading="lazy" src={images.coastline} alt="A modern coastal home overlooking the sea, with a broad terrace and water at the edge of the frame." />
-          <span className="teaser-number">02 / THE COAST</span><span className="teaser-title">Where the horizon<br />sets the pace.</span><ArrowUpRight aria-hidden="true" size={20} strokeWidth={1} />
-        </a>
-        <a href="#private-invitation" className="destination-teaser">
-          <img loading="lazy" src={images.blueHour} alt="A glass-walled desert residence at twilight beside a reflecting pool and cactus landscape." />
-          <span className="teaser-number">03 / THE RETREAT</span><span className="teaser-title">A quieter kind<br />of arrival.</span><ArrowUpRight aria-hidden="true" size={20} strokeWidth={1} />
-        </a>
+      <div className="destination-secondary page-gutter" data-reveal>
+        {otherDestinations.map((destination) => (
+          <button
+            key={destination.slug}
+            type="button"
+            className="destination-teaser"
+            onClick={() => onOpenExperience({ kind: 'destination', slug: destination.slug })}
+          >
+            <img loading="lazy" src={destination.image} alt={destination.alt} />
+            <span className="teaser-number">{destination.number} / {destination.name}</span>
+            <span className="teaser-title">{destination.slug === 'the-coast' ? <>Where the horizon<br />sets the pace.</> : <>A quieter kind<br />of arrival.</>}</span>
+            <ArrowUpRight aria-hidden="true" size={20} strokeWidth={1} />
+          </button>
+        ))}
       </div>
     </section>
   )
 }
 
-const stories = [
-  { category: 'Architecture', title: 'When material becomes memory', image: images.stair, alt: 'Sunlight across a honed stone wall and illuminated floating staircase.', number: '01' },
-  { category: 'The considered life', title: 'A room shaped by the view', image: images.penthouse, alt: 'Sculptural ivory furniture set against a full-height city panorama.', number: '02' },
-  { category: 'Landscape', title: 'The quiet intelligence of a garden', image: images.tropicalEstate, alt: 'Aerial view over a private residence nested within dense tropical gardens.', number: '03' },
-]
+function Perspective({ onOpenExperience }: { onOpenExperience: (next: VelorExperience) => void }) {
+  const openStory = (slug: string) => onOpenExperience({ kind: 'story', slug })
 
-function Perspective() {
   return (
     <section className="perspective section-ivory" id="perspective" aria-labelledby="perspective-title">
-      <div className="perspective-heading page-gutter">
+      <div className="perspective-heading page-gutter" data-reveal>
         <div><Eyebrow>Notes on exceptional living</Eyebrow><span className="section-number">05</span></div>
-        <div className="perspective-title-row"><h2 id="perspective-title">The Velor<br /><em>perspective.</em></h2><div><p>A point of view beyond property. On architecture, art, material and the places that stay with us.</p><ArrowLink href="#private-invitation">View all perspectives</ArrowLink></div></div>
+        <div className="perspective-title-row"><h2 id="perspective-title">The Velor<br /><em>perspective.</em></h2><div><p>A point of view beyond property. On architecture, art, material and the places that stay with us.</p><ExperienceLink onClick={() => openStory(stories[0].slug)}>View all perspectives</ExperienceLink></div></div>
       </div>
-      <div className="story-grid page-gutter">
+      <div className="story-grid page-gutter" data-reveal>
         {stories.map((story) => (
-          <article className="story-card" key={story.number}>
-            <a className="story-image image-frame" href="#private-invitation" aria-label={`Read: ${story.title}`}>
+          <article className="story-card" key={story.slug}>
+            <button className="story-image image-frame" type="button" onClick={() => openStory(story.slug)} aria-label={`Read: ${story.title}`}>
               <img loading="lazy" src={story.image} alt={story.alt} />
               <span className="story-arrow" aria-hidden="true"><ArrowUpRight size={18} strokeWidth={1} /></span>
-            </a>
+            </button>
             <div className="story-meta"><Eyebrow>{story.category}</Eyebrow><span>{story.number} / 03</span></div>
-            <h3><a href="#private-invitation">{story.title}</a></h3>
-            <a className="story-read" href="#private-invitation">A closer look <ArrowRight aria-hidden="true" size={13} strokeWidth={1.2} /></a>
+            <h3><button className="story-title-button" type="button" onClick={() => openStory(story.slug)}>{story.title}</button></h3>
+            <button className="story-read" type="button" onClick={() => openStory(story.slug)}>A closer look <ArrowRight aria-hidden="true" size={13} strokeWidth={1.2} /></button>
           </article>
         ))}
       </div>
@@ -371,7 +394,7 @@ function Perspective() {
   )
 }
 
-function PrivateInvitation() {
+function PrivateInvitation({ onOpenExperience }: { onOpenExperience: (next: VelorExperience) => void }) {
   return (
     <section className="private-invitation" id="private-invitation" aria-labelledby="invitation-title">
       <img className="invitation-image" loading="lazy" src="/images/velor-private-courtyard.png" alt="A secluded limestone residence courtyard at blue hour, with a still reflecting pool and warm light behind glass." />
@@ -380,20 +403,20 @@ function PrivateInvitation() {
         <Eyebrow className="eyebrow-bronze">A private invitation</Eyebrow>
         <h2 id="invitation-title">Some discoveries begin<br />with a <em>conversation.</em></h2>
         <p>Whether you are searching for an exceptional residence or exploring a property opportunity, our team welcomes a more personal conversation.</p>
-        <a href="#contact" className="invitation-link">Private enquiries <ArrowUpRight aria-hidden="true" size={18} strokeWidth={1} /></a>
+        <button className="invitation-link" type="button" onClick={() => onOpenExperience({ kind: 'enquiry', enquiryType: 'consultation' })}>Private enquiries <ArrowUpRight aria-hidden="true" size={18} strokeWidth={1} /></button>
       </div>
       <span className="invitation-index">VELOR / PRIVATE OFFICE</span>
     </section>
   )
 }
 
-function SiteFooter() {
+function SiteFooter({ onOpenExperience }: { onOpenExperience: (next: VelorExperience) => void }) {
   return (
     <footer className="site-footer section-obsidian" id="contact">
       <div className="footer-main page-gutter">
         <div className="footer-brand"><a href="#top" aria-label="VELOR Private Estates home"><BrandWordmark /></a><p>Beyond the address.</p></div>
         <div className="footer-column"><Eyebrow>Discover</Eyebrow><a href="#collection">The collection</a><a href="#destinations">Destinations</a><a href="#perspective">The perspective</a><a href="#philosophy">Our philosophy</a></div>
-        <div className="footer-column"><Eyebrow>Private office</Eyebrow><a href="#private-invitation">Private enquiries</a><span>By introduction / by appointment</span></div>
+        <div className="footer-column"><Eyebrow>Private office</Eyebrow><button type="button" onClick={() => onOpenExperience({ kind: 'enquiry', enquiryType: 'consultation' })}>Private enquiries</button><span>By introduction / by appointment</span></div>
         <div className="footer-signature"><span className="signature-line" aria-hidden="true" /><span className="display-text">The living gallery.</span></div>
       </div>
       <div className="footer-bottom page-gutter"><span>© 2026 VELOR PRIVATE ESTATES</span><span>International private property</span><a href="#top">Back to top ↑</a></div>
@@ -401,17 +424,86 @@ function SiteFooter() {
   )
 }
 
+function ArrivalSequence() {
+  const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setVisible(false)
+      return
+    }
+
+    const timeout = window.setTimeout(() => setVisible(false), 1800)
+    return () => window.clearTimeout(timeout)
+  }, [])
+
+  if (!visible) return null
+
+  return (
+    <div className="arrival-sequence" aria-hidden="true">
+      <span className="arrival-sequence-wordmark">VELOR</span>
+      <span className="arrival-sequence-descriptor">PRIVATE ESTATES</span>
+      <span className="arrival-sequence-rule" />
+    </div>
+  )
+}
+
+function useScrollReveals() {
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'))
+    if (!elements.length) return
+
+    document.documentElement.classList.add('velor-motion-ready')
+
+    if (!('IntersectionObserver' in window)) {
+      elements.forEach((element) => element.classList.add('is-visible'))
+      return () => document.documentElement.classList.remove('velor-motion-ready')
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return
+        entry.target.classList.add('is-visible')
+        observer.unobserve(entry.target)
+      })
+    }, { threshold: 0.12, rootMargin: '0px 0px -32px 0px' })
+
+    elements.forEach((element) => observer.observe(element))
+    return () => {
+      observer.disconnect()
+      document.documentElement.classList.remove('velor-motion-ready')
+    }
+  }, [])
+}
+
 export function VelorHomepage() {
+  const [experience, setExperience] = useState<VelorExperience | null>(null)
+  useScrollReveals()
+
+  const openExperience = (next: VelorExperience) => setExperience(next)
+
   return (
     <main className="velor-site">
+      <a className="skip-link" href="#philosophy">Skip to content</a>
+      <ArrivalSequence />
+      <SiteHeader onOpenExperience={openExperience} />
       <Hero />
       <Philosophy />
-      <Collection />
-      <ArtOfPlace />
-      <Destinations />
-      <Perspective />
-      <PrivateInvitation />
-      <SiteFooter />
+      <Collection onOpenExperience={openExperience} />
+      <ArtOfPlace onOpenExperience={openExperience} />
+      <Destinations onOpenExperience={openExperience} />
+      <Perspective onOpenExperience={openExperience} />
+      <PrivateInvitation onOpenExperience={openExperience} />
+      <SiteFooter onOpenExperience={openExperience} />
+      {experience && (
+        <VelorExperienceLayer
+          experience={experience}
+          onClose={() => setExperience(null)}
+          onNavigate={(next) => setExperience(next)}
+        />
+      )}
     </main>
   )
 }
