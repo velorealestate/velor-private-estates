@@ -333,7 +333,7 @@ function ResidenceExperience({
             Enter the gallery <ArrowDownRight aria-hidden="true" size={17} strokeWidth={1.1} />
           </button>
         </div>
-        <span className="residence-hero-index">Illustrative collection / not an available listing</span>
+        <span className="residence-hero-index">Illustrative collection / {residence.number}</span>
       </section>
 
       <section className="residence-introduction section-ivory page-gutter">
@@ -415,7 +415,7 @@ function ResidenceExperience({
               </div>
             ))}
           </dl>
-          <p className="concept-note">The VELOR collection shown here is illustrative. No pricing, dimensions or availability are implied.</p>
+          <p className="concept-note">The VELOR collection shown here is illustrative. Pricing and dimensions are not represented.</p>
         </div>
       </section>
 
@@ -512,7 +512,7 @@ function DestinationExperience({
             <span className="eyebrow eyebrow-bronze">A curated collection</span>
             <h2 id="destination-residences-title">Residences in <em>conversation.</em></h2>
           </div>
-          <span className="concept-note">Illustrative residences / not available listings</span>
+          <span className="concept-note">Curated collection / {destination.residences.length} residences</span>
         </div>
         <div className="related-residence-grid">
           {destination.residences.map((slug) => {
