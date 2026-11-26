@@ -397,7 +397,7 @@ function Collection({ onOpenExperience }: { onOpenExperience: (next: VelorExperi
         ))}
       </div>
       <div className="collection-foot page-gutter">
-        <span>Illustrative collection / not available listings</span>
+        <span>Illustrative collection / 001—003</span>
         <ExperienceLink onClick={() => onOpenExperience({ kind: 'residence', slug: residences[0].slug })}>Explore the collection</ExperienceLink>
       </div>
     </section>
@@ -552,16 +552,98 @@ function Perspective({ onOpenExperience }: { onOpenExperience: (next: VelorExper
   )
 }
 
+const invitationSlides = [
+  {
+    title: 'A quieter arrival',
+    images: [
+      { src: images.courtyard, alt: 'A secluded limestone residence courtyard at blue hour, with a still reflecting pool and warm light behind glass.', caption: 'A private arrival', detail: 'Stone / water / light' },
+      { src: images.santoriniGarden, alt: 'A landscaped residence courtyard with mature trees, pale stone paths and a sculptural fountain.', caption: 'A garden retreat', detail: 'Canopy / stone / water' },
+    ],
+  },
+  {
+    title: 'Architecture in context',
+    images: [
+      { src: images.santoriniFacade, alt: 'A contemporary residential facade at blue hour, its curved glass outlined in warm light.', caption: 'The city silhouette', detail: 'Glass / evening light' },
+      { src: images.santoriniRooftop, alt: 'An overhead view of curved terraces, garden seating and pools.', caption: 'The rooftop landscape', detail: 'Terrace / water / canopy' },
+    ],
+  },
+]
+
 function PrivateInvitation({ onOpenExperience }: { onOpenExperience: (next: VelorExperience) => void }) {
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(false)
+
+  useEffect(() => {
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setIsPlaying(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isPlaying) return
+
+    const interval = window.setInterval(() => {
+      if (!document.hidden) setActiveSlide((current) => (current + 1) % invitationSlides.length)
+    }, 7200)
+
+    return () => window.clearInterval(interval)
+  }, [isPlaying])
+
+  function moveSlide(direction: -1 | 1) {
+    setActiveSlide((current) => (current + direction + invitationSlides.length) % invitationSlides.length)
+  }
+
+  const activeImages = invitationSlides[activeSlide]
+
   return (
     <section className="private-invitation" id="private-invitation" aria-labelledby="invitation-title">
-      <img className="invitation-image" loading="lazy" src="/images/velor-private-courtyard.png" alt="A secluded limestone residence courtyard at blue hour, with a still reflecting pool and warm light behind glass." />
-      <div className="invitation-overlay" aria-hidden="true" />
-      <div className="invitation-content page-gutter">
+      <div className="invitation-content">
         <Eyebrow className="eyebrow-bronze">A private invitation</Eyebrow>
         <h2 id="invitation-title">Some discoveries begin<br />with a <em>conversation.</em></h2>
         <p>Whether you are searching for an exceptional residence or exploring a property opportunity, our team welcomes a more personal conversation.</p>
         <button className="invitation-link" type="button" onClick={() => onOpenExperience({ kind: 'enquiry', enquiryType: 'consultation' })}>Private enquiries <ArrowUpRight aria-hidden="true" size={18} strokeWidth={1} /></button>
+      </div>
+      <div className="invitation-gallery" role="region" aria-roledescription="carousel" aria-label="Private invitation image gallery">
+        <div className="invitation-gallery-grid" key={activeSlide}>
+          {activeImages.images.map((image, index) => (
+            <figure className="invitation-frame image-frame" key={image.src}>
+              <img loading="lazy" src={image.src} alt={image.alt} />
+              <figcaption><span>0{index + 1} / {image.caption}</span><span>{image.detail}</span></figcaption>
+            </figure>
+          ))}
+        </div>
+        <div className="invitation-controls" role="group" aria-label="Invitation slideshow controls">
+          <button className="invitation-control" type="button" onClick={() => moveSlide(-1)} aria-label="Show previous invitation images">
+            <ChevronLeft aria-hidden="true" size={15} strokeWidth={1.1} />
+          </button>
+          <span className="invitation-count" aria-live={isPlaying ? 'off' : 'polite'} aria-atomic="true">
+            {String(activeSlide + 1).padStart(2, '0')} <i>/</i> {String(invitationSlides.length).padStart(2, '0')}
+          </span>
+          <div className="invitation-pagination" role="group" aria-label="Choose an image pair">
+            {invitationSlides.map((slide, index) => (
+              <button
+                className="invitation-pagination-item"
+                key={slide.title}
+                type="button"
+                aria-label={`Show image pair ${index + 1}: ${slide.title}`}
+                aria-pressed={index === activeSlide}
+                onClick={() => setActiveSlide(index)}
+              >
+                <span aria-hidden="true" />
+              </button>
+            ))}
+          </div>
+          <button className="invitation-control" type="button" onClick={() => moveSlide(1)} aria-label="Show next invitation images">
+            <ChevronRight aria-hidden="true" size={15} strokeWidth={1.1} />
+          </button>
+          <button
+            className="invitation-control invitation-play-toggle"
+            type="button"
+            onClick={() => setIsPlaying((playing) => !playing)}
+            aria-label={isPlaying ? 'Pause invitation slideshow' : 'Play invitation slideshow'}
+            aria-pressed={isPlaying}
+          >
+            {isPlaying ? <Pause aria-hidden="true" size={12} strokeWidth={1.2} /> : <Play aria-hidden="true" size={12} strokeWidth={1.2} />}
+          </button>
+        </div>
       </div>
       <span className="invitation-index">VELOR / PRIVATE OFFICE</span>
     </section>
