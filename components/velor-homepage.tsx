@@ -7,6 +7,7 @@ import { VelorExperienceLayer, type VelorExperience } from '@/components/velor-e
 
 const navigation = [
   { label: 'The collection', href: '#collection' },
+  { label: 'Available residences', href: '/listings' },
   { label: 'Destinations', href: '#destinations' },
   { label: 'The perspective', href: '#perspective' },
   { label: 'Our philosophy', href: '#philosophy' },
@@ -146,10 +147,15 @@ function SiteHeader({ onOpenExperience }: { onOpenExperience: (next: VelorExperi
                   onOpenExperience({ kind: 'enquiry', enquiryType: 'consultation' })
                 }}
               >
-                <span className="menu-number">05</span>
+                <span className="menu-number">06</span>
                 <span>Private enquiries</span>
                 <ArrowUpRight aria-hidden="true" size={23} strokeWidth={1} />
               </button>
+              <a href="/sign-in" onClick={closeMenu}>
+                <span className="menu-number">07</span>
+                <span>Client portal</span>
+                <ArrowUpRight aria-hidden="true" size={23} strokeWidth={1} />
+              </a>
             </nav>
             <figure className="menu-feature image-frame">
               <img src={images.hero} alt="A contemporary residence at blue hour, opening onto a reflecting pool." loading="lazy" />
@@ -421,7 +427,7 @@ function SiteFooter({ onOpenExperience }: { onOpenExperience: (next: VelorExperi
       <div className="footer-main page-gutter">
         <div className="footer-brand"><a href="#top" aria-label="Velor Private Estates home"><BrandWordmark /></a><p>Beyond the address.</p></div>
         <div className="footer-column"><Eyebrow>Discover</Eyebrow><a href="#collection">The collection</a><a href="#destinations">Destinations</a><a href="#perspective">The perspective</a><a href="#philosophy">Our philosophy</a></div>
-        <div className="footer-column"><Eyebrow>Private office</Eyebrow><button type="button" onClick={() => onOpenExperience({ kind: 'enquiry', enquiryType: 'consultation' })}>Private enquiries</button><span>By introduction / by appointment</span></div>
+        <div className="footer-column"><Eyebrow>Private office</Eyebrow><button type="button" onClick={() => onOpenExperience({ kind: 'enquiry', enquiryType: 'consultation' })}>Private enquiries</button><a href="/listings">Available residences</a><a href="/sign-in">Client portal</a><span>By introduction / by appointment</span></div>
         <div className="footer-signature"><span className="signature-line" aria-hidden="true" /><span className="display-text">The living gallery.</span></div>
       </div>
       <div className="footer-bottom page-gutter"><span>© 2026 VELOR PRIVATE ESTATES</span><span>International private property</span><a href="#top">Back to top ↑</a></div>
