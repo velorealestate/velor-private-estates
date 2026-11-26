@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { getDatabase } from '@/lib/db'
 import { velorEnquiries } from '@/lib/db/schema'
 
 export const runtime = 'nodejs'
@@ -116,8 +116,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Please confirm the privacy notice before sending.' }, { status: 400 })
   }
 
+  const database = getDatabase()
+  if (!database) {
+    return NextResponse.json(
+      { message: 'Enquiry submission is unavailable in this deployment.' },
+      { status: 503 },
+    )
+  }
+
   try {
-    const [createdEnquiry] = await db
+    const [createdEnquiry] = await database
       .insert(velorEnquiries)
       .values({
         fullName,

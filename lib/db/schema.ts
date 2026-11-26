@@ -1,5 +1,16 @@
-import { boolean, check, pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
 import { sql } from 'drizzle-orm'
+import {
+  boolean,
+  check,
+  index,
+  numeric,
+  pgTable,
+  smallint,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from 'drizzle-orm/pg-core'
 
 export const velorEnquiries = pgTable(
   'velor_enquiries',
@@ -30,5 +41,36 @@ export const velorEnquiries = pgTable(
       'velor_enquiries_status_check',
       sql`${table.status} in ('new', 'contacted', 'closed')`,
     ),
+  ],
+)
+
+export const velorListings = pgTable(
+  'velor_listings',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: text('user_id').notNull(),
+    title: varchar('title', { length: 180 }).notNull(),
+    location: varchar('location', { length: 180 }).notNull(),
+    propertyType: varchar('property_type', { length: 48 }).notNull(),
+    status: varchar('status', { length: 16, enum: ['draft', 'published'] }).notNull().default('draft'),
+    price: numeric('price', { precision: 14, scale: 2 }),
+    currency: varchar('currency', { length: 3, enum: ['USD', 'EUR', 'GBP', 'CHF'] }).notNull().default('USD'),
+    bedrooms: smallint('bedrooms'),
+    bathrooms: smallint('bathrooms'),
+    areaSqm: numeric('area_sqm', { precision: 12, scale: 2 }),
+    coverImage: text('cover_image'),
+    summary: varchar('summary', { length: 500 }).notNull(),
+    description: text('description').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    check('velor_listings_status_check', sql`${table.status} in ('draft', 'published')`),
+    check(
+      'velor_listings_currency_check',
+      sql`${table.currency} in ('USD', 'EUR', 'GBP', 'CHF')`,
+    ),
+    index('velor_listings_owner_updated_idx').on(table.userId, table.updatedAt),
+    index('velor_listings_public_updated_idx').on(table.status, table.updatedAt),
   ],
 )
