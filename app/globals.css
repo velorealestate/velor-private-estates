@@ -207,6 +207,25 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .collection-foot { display: flex; max-width: 1660px; align-items: center; justify-content: space-between; gap: 22px; margin: 78px auto 0; padding-top: 18px; border-top: 1px solid var(--line-dark); color: rgba(234, 228, 217, .45); font-size: 8px; letter-spacing: .13em; text-transform: uppercase; }
 .collection-foot .arrow-link { color: var(--ivory); }
 
+/* Santorini Residences */
+.santorini-feature { padding: clamp(95px, 12vw, 160px) 0 clamp(100px, 12vw, 170px); }
+.santorini-heading { max-width: 1660px; margin: 0 auto; }
+.santorini-heading > .eyebrow { margin-bottom: 29px; color: #817466; }
+.santorini-intro { display: grid; grid-template-columns: 1.2fr .8fr; gap: clamp(35px, 7vw, 100px); align-items: end; }
+.santorini-intro h2 { margin: 0; font-family: var(--serif); font-size: clamp(60px, 8vw, 112px); font-weight: 400; letter-spacing: -.06em; line-height: .82; }
+.santorini-intro h2 em { color: var(--bronze-dark); font-weight: 400; }
+.santorini-copy { max-width: 390px; padding-bottom: 5px; }
+.santorini-copy p { margin: 0 0 25px; color: #6e6459; font-size: 11px; line-height: 1.9; }
+.santorini-link { display: inline-flex; align-items: center; gap: 15px; padding: 0 0 9px; border: 0; border-bottom: 1px solid var(--bronze-dark); color: var(--espresso); background: transparent; cursor: pointer; font-size: 8px; font-weight: 500; letter-spacing: .15em; text-align: left; text-transform: uppercase; transition: color .2s ease, gap .2s ease; }
+.santorini-link:hover { gap: 22px; color: var(--bronze-dark); }
+.santorini-gallery { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; max-width: 1660px; margin: 66px auto 0; }
+.santorini-image { position: relative; margin: 0; }
+.santorini-image-aerial { grid-column: 1 / span 7; grid-row: 1 / span 2; min-height: 570px; }
+.santorini-image-facade { grid-column: 9 / span 4; grid-row: 1; height: 275px; margin-top: 22px; }
+.santorini-image-garden { grid-column: 8 / span 5; grid-row: 2; height: 285px; margin-top: 4px; }
+.santorini-image-rooftop { grid-column: 3 / span 8; grid-row: 3; height: 300px; margin-top: 20px; }
+.santorini-image figcaption { position: absolute; right: 0; bottom: 0; left: 0; display: flex; justify-content: space-between; gap: 14px; padding: 28px 18px 13px; color: rgba(255, 255, 255, .9); background: linear-gradient(0deg, rgba(10, 10, 9, .62), transparent); font-size: 7px; letter-spacing: .12em; text-transform: uppercase; }
+
 /* Art of place */
 .art-of-place { padding: clamp(95px, 12vw, 160px) 0 clamp(100px, 12vw, 170px); }
 .art-head { display: grid; grid-template-columns: .7fr 1.8fr; gap: clamp(50px, 10vw, 150px); max-width: 1660px; margin: 0 auto; }
@@ -290,16 +309,23 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .invitation-link:hover { gap: 26px; color: var(--bronze); }
 .invitation-index { position: absolute; right: var(--page-gutter); bottom: 29px; color: rgba(245, 242, 236, .65); font-size: 8px; letter-spacing: .16em; text-transform: uppercase; }
 .site-footer { padding: 74px 0 22px; }
-.footer-main { display: grid; grid-template-columns: 1.3fr .7fr .8fr 1fr; gap: 35px; max-width: 1660px; margin: 0 auto; padding-bottom: 68px; }
+.footer-main { display: grid; grid-template-columns: 1.1fr .85fr .9fr 1.35fr 1.1fr; gap: 30px; max-width: 1660px; margin: 0 auto; padding-bottom: 68px; }
 .footer-brand .brand-lockup { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 7px; }
 .footer-brand .brand-name { font-size: 22px; }
 .footer-brand .brand-descriptor { font-size: 7px; }
 .footer-brand p { margin: 19px 0 0; color: rgba(234, 228, 217, .54); font-family: var(--serif); font-size: 18px; }
 .footer-column { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
 .footer-column .eyebrow { margin-bottom: 7px; color: var(--bronze); font-size: 7px; }
-.footer-column a, .footer-column span { color: rgba(234, 228, 217, .71); font-size: 9px; transition: color .2s ease; }
-.footer-column a:hover { color: var(--bronze); }
-.footer-column span { margin-top: 2px; color: rgba(234, 228, 217, .42); font-size: 8px; }
+.footer-column a, .footer-column span { color: rgba(234, 228, 217, .71); font-size: 10px; transition: color .2s ease; }
+.footer-column a:hover, .footer-column button:hover { color: var(--bronze); }
+.footer-column button { padding: 0; border: 0; color: rgba(234, 228, 217, .71); background: transparent; cursor: pointer; font-size: 10px; text-align: left; transition: color .2s ease; }
+.footer-column span { margin-top: 2px; color: rgba(234, 228, 217, .42); font-size: 9px; }
+.footer-contact { gap: 11px; }
+.footer-contact a { overflow-wrap: anywhere; }
+.footer-contact address { margin: 3px 0 0; color: rgba(234, 228, 217, .71); font-size: 10px; font-style: normal; line-height: 1.7; }
+.footer-socials { gap: 10px; }
+.footer-social-link { display: flex; flex-wrap: wrap; gap: 5px; align-items: baseline; }
+.footer-social-link span:last-child { color: rgba(234, 228, 217, .47); font-size: 9px; }
 .footer-signature { display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-end; gap: 13px; color: var(--bronze); }
 .signature-line { width: 37px; height: 1px; background: currentColor; }
 .footer-signature .display-text { font-size: 22px; }
@@ -354,7 +380,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .hero-index { display: none; }
   .scroll-cue { justify-self: end; }
   .scroll-cue-line { display: none; }
-  .philosophy, .collection, .art-of-place, .destinations, .perspective { padding-top: 84px; padding-bottom: 88px; }
+  .philosophy, .collection, .santorini-feature, .art-of-place, .destinations, .perspective { padding-top: 84px; padding-bottom: 88px; }
   .philosophy-grid, .collection-heading, .art-head, .destination-heading, .perspective-heading { grid-template-columns: 1fr; gap: 30px; }
   .philosophy-aside { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 15px; }
   .philosophy-aside .section-number { margin: 0; }
@@ -370,6 +396,16 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .collection-title-block h2 { font-size: clamp(43px, 11vw, 68px); }
   .collection-title-block p { margin-top: 18px; }
   .collection-grid { grid-template-columns: 1fr; gap: 38px; margin-top: 42px; }
+  .santorini-heading > .eyebrow { margin-bottom: 22px; }
+  .santorini-intro { grid-template-columns: 1fr; gap: 22px; }
+  .santorini-intro h2 { font-size: clamp(59px, 15vw, 88px); }
+  .santorini-copy { max-width: 400px; }
+  .santorini-gallery { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-top: 38px; }
+  .santorini-image-aerial { grid-column: 1 / -1; grid-row: auto; min-height: 0; height: auto; aspect-ratio: 1.12 / 1; }
+  .santorini-image-facade { grid-column: 1 / span 3; grid-row: auto; height: auto; aspect-ratio: .82 / 1; margin-top: 0; }
+  .santorini-image-garden { grid-column: 4 / span 3; grid-row: auto; height: auto; aspect-ratio: .82 / 1; margin-top: 0; }
+  .santorini-image-rooftop { grid-column: 1 / -1; grid-row: auto; height: auto; aspect-ratio: 1.55 / 1; margin-top: 0; }
+  .santorini-image figcaption { flex-direction: column; gap: 4px; padding: 24px 11px 10px; font-size: 6px; }
   .property-estate, .property-residence, .property-sanctuary { grid-column: 1; margin-top: 0; }
   .property-estate .property-image, .property-residence .property-image, .property-sanctuary .property-image { height: auto; aspect-ratio: 1.12 / 1; }
   .property-residence .property-image { aspect-ratio: .95 / 1; }

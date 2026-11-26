@@ -1,5 +1,9 @@
 export const images = {
-  hero: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-04.jfif-9MLr5iu8FrwKR3tx3sbdJ30doJkqR7.jpeg',
+  hero: '/images/santorini-twilight.jpeg',
+  santoriniAerial: '/images/santorini-aerial.jpeg',
+  santoriniFacade: '/images/santorini-facade.jpeg',
+  santoriniGarden: '/images/santorini-garden.jpeg',
+  santoriniRooftop: '/images/santorini-rooftop.jpeg',
   tropicalEstate: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-1.2.jfif-6zEewxPnxAzZADCGp8UuzvaJTn5ngX.jpeg',
   penthouse: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-07.jfif-B18eCzK2ooWXsDEvR9wQ0OOvvJhtVI.jpeg',
   mountainResidence: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/inspo-03.jfif-4YLIRYXtJsPTfGtIQytm3pPRv35Tzk.jpeg',
