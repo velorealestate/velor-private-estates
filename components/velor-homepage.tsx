@@ -15,7 +15,7 @@ const navigation = [
 function BrandWordmark({ light = true }: { light?: boolean }) {
   return (
     <span className={`brand-lockup${light ? ' brand-lockup-light' : ''}`}>
-      <span className="brand-name">VELOR</span>
+      <span className="brand-name">Velor</span>
       <span className="brand-descriptor">PRIVATE ESTATES</span>
     </span>
   )
@@ -96,7 +96,7 @@ function SiteHeader({ onOpenExperience }: { onOpenExperience: (next: VelorExperi
   return (
     <>
       <header className={`site-header${scrolled ? ' site-header-scrolled' : ''}`}>
-        <a className="brand-home" href="#top" aria-label="VELOR Private Estates home">
+        <a className="brand-home" href="#top" aria-label="Velor Private Estates home">
           <BrandWordmark />
         </a>
         <nav className="desktop-nav" aria-label="Main navigation">
@@ -117,7 +117,7 @@ function SiteHeader({ onOpenExperience }: { onOpenExperience: (next: VelorExperi
         </button>
       </header>
       {menuOpen && (
-        <div className="menu-overlay" id="velor-menu" ref={menuRef} role="dialog" aria-modal="true" aria-label="VELOR navigation">
+        <div className="menu-overlay" id="velor-menu" ref={menuRef} role="dialog" aria-modal="true" aria-label="Velor navigation">
           <div className="menu-overlay-top">
             <BrandWordmark />
             <button ref={closeRef} className="menu-toggle menu-close" type="button" onClick={closeMenu} aria-label="Close navigation menu">
@@ -414,7 +414,7 @@ function SiteFooter({ onOpenExperience }: { onOpenExperience: (next: VelorExperi
   return (
     <footer className="site-footer section-obsidian" id="contact">
       <div className="footer-main page-gutter">
-        <div className="footer-brand"><a href="#top" aria-label="VELOR Private Estates home"><BrandWordmark /></a><p>Beyond the address.</p></div>
+        <div className="footer-brand"><a href="#top" aria-label="Velor Private Estates home"><BrandWordmark /></a><p>Beyond the address.</p></div>
         <div className="footer-column"><Eyebrow>Discover</Eyebrow><a href="#collection">The collection</a><a href="#destinations">Destinations</a><a href="#perspective">The perspective</a><a href="#philosophy">Our philosophy</a></div>
         <div className="footer-column"><Eyebrow>Private office</Eyebrow><button type="button" onClick={() => onOpenExperience({ kind: 'enquiry', enquiryType: 'consultation' })}>Private enquiries</button><span>By introduction / by appointment</span></div>
         <div className="footer-signature"><span className="signature-line" aria-hidden="true" /><span className="display-text">The living gallery.</span></div>
@@ -440,8 +440,13 @@ function ArrivalSequence() {
   if (!visible) return null
 
   return (
-    <div className="arrival-sequence" role="region" aria-label="VELOR Private Estates opening sequence">
-      <span className="arrival-sequence-wordmark">VELOR</span>
+    <div className="arrival-sequence" role="region" aria-label="Velor Private Estates opening sequence">
+      <span className="arrival-sequence-wordmark">
+        <span className="sr-only">Velor</span>
+        <span className="arrival-sequence-letters" aria-hidden="true">
+          <span>V</span><span>e</span><span>l</span><span>o</span><span>r</span>
+        </span>
+      </span>
       <span className="arrival-sequence-descriptor">PRIVATE ESTATES</span>
       <span className="arrival-sequence-rule" />
       <button className="arrival-sequence-skip" type="button" onClick={() => setVisible(false)}>

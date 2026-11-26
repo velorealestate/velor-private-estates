@@ -75,8 +75,8 @@ function ExperienceTopbar({
 }) {
   return (
     <div className="experience-topbar">
-      <div className="experience-wordmark" aria-label="VELOR Private Estates">
-        <span>VELOR</span>
+      <div className="experience-wordmark" aria-label="Velor Private Estates">
+        <span>Velor</span>
         <small>PRIVATE ESTATES</small>
       </div>
       <span className="experience-topbar-context">{context}</span>
