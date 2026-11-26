@@ -1,16 +1,51 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { ArrowDown, ArrowRight, ArrowUpRight, Menu, X } from 'lucide-react'
+import { ArrowDown, ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Menu, Pause, Play, X } from 'lucide-react'
 import { destinations, images, residences, stories } from '@/components/velor-content'
 import { VelorExperienceLayer, type VelorExperience } from '@/components/velor-experience'
 
 const navigation = [
   { label: 'The collection', href: '#collection' },
+  { label: 'Santorini Residences', href: '#santorini' },
   { label: 'Available residences', href: '/listings' },
   { label: 'Destinations', href: '#destinations' },
   { label: 'The perspective', href: '#perspective' },
   { label: 'Our philosophy', href: '#philosophy' },
+]
+
+const primaryNavigation = [
+  { label: 'The collection', href: '#collection' },
+  { label: 'Santorini', href: '#santorini' },
+  { label: 'Destinations', href: '#destinations' },
+  { label: 'Perspective', href: '#perspective' },
+]
+
+const heroSlides = [
+  {
+    id: 'aerial',
+    title: 'Elevated gardens',
+    src: images.santoriniAerial,
+    alt: 'Aerial view of Santorini Residences, with sculptural rooftop gardens and illuminated pools above a leafy city.',
+  },
+  {
+    id: 'facade',
+    title: 'The city silhouette',
+    src: images.santoriniFacade,
+    alt: 'Santorini Residences at blue hour, its curved glass facade outlined in warm light.',
+  },
+  {
+    id: 'garden',
+    title: 'A garden retreat',
+    src: images.santoriniGarden,
+    alt: 'A landscaped Santorini courtyard with mature trees, pale stone paths and a sculptural fountain.',
+  },
+  {
+    id: 'rooftop',
+    title: 'The rooftop landscape',
+    src: images.santoriniRooftop,
+    alt: 'Overhead view of the Santorini rooftop, with curved terraces, planted seating and pools.',
+  },
 ]
 
 function BrandWordmark({ light = true }: { light?: boolean }) {
@@ -106,10 +141,18 @@ function SiteHeader({ onOpenExperience }: { onOpenExperience: (next: VelorExperi
           <BrandWordmark />
         </a>
         <nav className="desktop-nav" aria-label="Main navigation">
-          {navigation.map((item) => (
+          {primaryNavigation.map((item) => (
             <a href={item.href} key={item.href}>{item.label}</a>
           ))}
         </nav>
+        <button
+          className="header-enquiry"
+          type="button"
+          onClick={() => onOpenExperience({ kind: 'enquiry', enquiryType: 'consultation' })}
+        >
+          <span>Private office</span>
+          <ArrowUpRight aria-hidden="true" size={14} strokeWidth={1.1} />
+        </button>
         <button
           ref={toggleRef}
           className="menu-toggle"
@@ -147,12 +190,12 @@ function SiteHeader({ onOpenExperience }: { onOpenExperience: (next: VelorExperi
                   onOpenExperience({ kind: 'enquiry', enquiryType: 'consultation' })
                 }}
               >
-                <span className="menu-number">06</span>
+                <span className="menu-number">07</span>
                 <span>Private enquiries</span>
                 <ArrowUpRight aria-hidden="true" size={23} strokeWidth={1} />
               </button>
               <a href="/sign-in" onClick={closeMenu}>
-                <span className="menu-number">07</span>
+                <span className="menu-number">08</span>
                 <span>Client portal</span>
                 <ArrowUpRight aria-hidden="true" size={23} strokeWidth={1} />
               </a>
@@ -173,9 +216,43 @@ function SiteHeader({ onOpenExperience }: { onOpenExperience: (next: VelorExperi
 }
 
 function Hero() {
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(false)
+
+  useEffect(() => {
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setIsPlaying(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isPlaying) return
+
+    const interval = window.setInterval(() => {
+      if (!document.hidden) {
+        setActiveSlide((current) => (current + 1) % heroSlides.length)
+      }
+    }, 7000)
+
+    return () => window.clearInterval(interval)
+  }, [isPlaying])
+
+  function moveSlide(direction: -1 | 1) {
+    setActiveSlide((current) => (current + direction + heroSlides.length) % heroSlides.length)
+  }
+
   return (
     <section className="hero" id="top" aria-labelledby="hero-title">
-      <img className="hero-image" src={images.hero} alt="A modern glass residence at blue hour, its warm interior reflected in an infinity pool beside a wooded shoreline." fetchPriority="high" />
+      {heroSlides.map((slide, index) => (
+        <img
+          key={slide.id}
+          className={`hero-image hero-image--${slide.id}${index === activeSlide ? ' hero-image-active' : ''}`}
+          src={slide.src}
+          alt={slide.alt}
+          aria-hidden={index !== activeSlide}
+          fetchPriority={index === activeSlide ? 'high' : 'auto'}
+          loading={index === activeSlide ? 'eager' : 'lazy'}
+          draggable="false"
+        />
+      ))}
       <div className="hero-scrim" aria-hidden="true" />
       <div className="hero-content page-gutter">
         <Eyebrow className="hero-eyebrow">A different perspective on private property</Eyebrow>
@@ -185,10 +262,43 @@ function Hero() {
       </div>
       <div className="hero-footer page-gutter">
         <span className="hero-location">Selected residences&nbsp; / &nbsp;Worldwide</span>
+        <div className="hero-controls" role="group" aria-label="Hero slideshow controls">
+          <button className="hero-control-button" type="button" onClick={() => moveSlide(-1)} aria-label="Show previous hero image">
+            <ChevronLeft aria-hidden="true" size={16} strokeWidth={1.1} />
+          </button>
+          <span className="hero-index" aria-live={isPlaying ? 'off' : 'polite'} aria-atomic="true">
+            {String(activeSlide + 1).padStart(2, '0')} <i>/</i> {String(heroSlides.length).padStart(2, '0')}
+          </span>
+          <div className="hero-pagination" role="group" aria-label="Choose a hero image">
+            {heroSlides.map((slide, index) => (
+              <button
+                className="hero-pagination-item"
+                key={slide.id}
+                type="button"
+                aria-label={`Show image ${index + 1}: ${slide.title}`}
+                aria-pressed={index === activeSlide}
+                onClick={() => setActiveSlide(index)}
+              >
+                <span className="hero-pagination-line" aria-hidden="true" />
+              </button>
+            ))}
+          </div>
+          <button className="hero-control-button" type="button" onClick={() => moveSlide(1)} aria-label="Show next hero image">
+            <ChevronRight aria-hidden="true" size={16} strokeWidth={1.1} />
+          </button>
+          <button
+            className="hero-control-button hero-play-toggle"
+            type="button"
+            onClick={() => setIsPlaying((playing) => !playing)}
+            aria-label={isPlaying ? 'Pause slideshow' : 'Play slideshow'}
+            aria-pressed={isPlaying}
+          >
+            {isPlaying ? <Pause aria-hidden="true" size={13} strokeWidth={1.2} /> : <Play aria-hidden="true" size={13} strokeWidth={1.2} />}
+          </button>
+        </div>
         <a href="#philosophy" className="scroll-cue" aria-label="Scroll to our philosophy">
           <span>Scroll to discover</span><span className="scroll-cue-line" aria-hidden="true" /><ArrowDown aria-hidden="true" size={13} strokeWidth={1} />
         </a>
-        <span className="hero-index">01 — 08 &nbsp; / &nbsp; The living gallery</span>
       </div>
     </section>
   )
@@ -289,6 +399,43 @@ function Collection({ onOpenExperience }: { onOpenExperience: (next: VelorExperi
       <div className="collection-foot page-gutter">
         <span>Illustrative collection / not available listings</span>
         <ExperienceLink onClick={() => onOpenExperience({ kind: 'residence', slug: residences[0].slug })}>Explore the collection</ExperienceLink>
+      </div>
+    </section>
+  )
+}
+
+function SantoriniFeature({ onOpenExperience }: { onOpenExperience: (next: VelorExperience) => void }) {
+  return (
+    <section className="santorini-feature section-ivory" id="santorini" aria-labelledby="santorini-title">
+      <div className="santorini-heading page-gutter" data-reveal>
+        <Eyebrow>Architectural portrait / Santorini Residences</Eyebrow>
+        <div className="santorini-intro">
+          <h2 id="santorini-title">Santorini<br /><em>Residences.</em></h2>
+          <div className="santorini-copy">
+            <p>A sculptural tower of glass and white curves, with planted terraces, gardens and pools. Explore the architectural vision through its city silhouette and considered outdoor spaces.</p>
+            <button className="santorini-link" type="button" onClick={() => onOpenExperience({ kind: 'enquiry', enquiryType: 'property' })}>
+              Enquire about Santorini <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.1} />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="santorini-gallery page-gutter" aria-label="Santorini Residences architectural imagery" data-reveal>
+        <figure className="santorini-image santorini-image-aerial image-frame">
+          <img loading="lazy" src={images.santoriniAerial} alt="Aerial rendering of Santorini Residences, with sculptural rooftop gardens and illuminated pools above a leafy city." />
+          <figcaption><span>01 / Elevated gardens</span><span>Architecture / landscape</span></figcaption>
+        </figure>
+        <figure className="santorini-image santorini-image-facade image-frame">
+          <img loading="lazy" src={images.santoriniFacade} alt="Santorini Residences viewed from the street at blue hour, its curved glass facade outlined with warm light." />
+          <figcaption><span>02 / The city silhouette</span><span>Glass / light</span></figcaption>
+        </figure>
+        <figure className="santorini-image santorini-image-garden image-frame">
+          <img loading="lazy" src={images.santoriniGarden} alt="A landscaped Santorini Residences courtyard with trees, stone paths and a sculptural fountain." />
+          <figcaption><span>03 / A garden retreat</span><span>Water / planting</span></figcaption>
+        </figure>
+        <figure className="santorini-image santorini-image-rooftop image-frame">
+          <img loading="lazy" src={images.santoriniRooftop} alt="Overhead rendering of the Santorini rooftop, with curved terraces, garden seating and pools." />
+          <figcaption><span>04 / The rooftop landscape</span><span>Terrace / water / canopy</span></figcaption>
+        </figure>
       </div>
     </section>
   )
@@ -422,13 +569,22 @@ function PrivateInvitation({ onOpenExperience }: { onOpenExperience: (next: Velo
 }
 
 function SiteFooter({ onOpenExperience }: { onOpenExperience: (next: VelorExperience) => void }) {
+  const socialLinks = [
+    { label: 'Instagram', handle: '@velorestates', href: 'https://www.instagram.com/velorestates/' },
+    { label: 'TikTok', handle: '@velorprivatestates', href: 'https://www.tiktok.com/@velorprivatestates' },
+    { label: 'Pinterest', handle: 'velorestates', href: 'https://www.pinterest.com/velorestates/' },
+    { label: 'Snapchat', handle: 'Veloreststes', href: 'https://www.snapchat.com/add/Veloreststes' },
+    { label: 'Facebook Page', handle: 'Velor Private Estates', href: 'https://www.facebook.com/VelorPrivateEstates/' },
+  ]
+
   return (
     <footer className="site-footer section-obsidian" id="contact">
       <div className="footer-main page-gutter">
         <div className="footer-brand"><a href="#top" aria-label="Velor Private Estates home"><BrandWordmark /></a><p>Beyond the address.</p></div>
-        <div className="footer-column"><Eyebrow>Discover</Eyebrow><a href="#collection">The collection</a><a href="#destinations">Destinations</a><a href="#perspective">The perspective</a><a href="#philosophy">Our philosophy</a></div>
+        <div className="footer-column"><Eyebrow>Discover</Eyebrow><a href="#collection">The collection</a><a href="#santorini">Santorini Residences</a><a href="#destinations">Destinations</a><a href="#perspective">The perspective</a><a href="#philosophy">Our philosophy</a></div>
         <div className="footer-column"><Eyebrow>Private office</Eyebrow><button type="button" onClick={() => onOpenExperience({ kind: 'enquiry', enquiryType: 'consultation' })}>Private enquiries</button><a href="/listings">Available residences</a><a href="/sign-in">Client portal</a><span>By introduction / by appointment</span></div>
-        <div className="footer-signature"><span className="signature-line" aria-hidden="true" /><span className="display-text">The living gallery.</span></div>
+        <div className="footer-column footer-contact"><Eyebrow>Contact</Eyebrow><a href="tel:+254727750097">+254 727 750 097</a><a href="tel:0798008800">0798 008 800</a><a href="mailto:private@estate.lucene.co">private@estate.lucene.co</a><a href="mailto:odinga.billy@lucene.co">odinga.billy@lucene.co</a><address><a href="https://maps.google.com/?q=Jamhuri+Showgrounds%2C+ASK" target="_blank" rel="noreferrer">Jamhuri Showgrounds, ASK</a></address></div>
+        <div className="footer-column footer-socials"><Eyebrow>Follow VELOR</Eyebrow>{socialLinks.map((social) => <a className="footer-social-link" href={social.href} key={social.label} target="_blank" rel="noreferrer"><span>{social.label}</span><span>{social.handle}</span></a>)}</div>
       </div>
       <div className="footer-bottom page-gutter"><span>© 2026 VELOR PRIVATE ESTATES</span><span>International private property</span><a href="#top">Back to top ↑</a></div>
     </footer>
@@ -511,6 +667,7 @@ export function VelorHomepage() {
       <Hero />
       <Philosophy />
       <Collection onOpenExperience={openExperience} />
+      <SantoriniFeature onOpenExperience={openExperience} />
       <ArtOfPlace onOpenExperience={openExperience} />
       <Destinations onOpenExperience={openExperience} />
       <Perspective onOpenExperience={openExperience} />
