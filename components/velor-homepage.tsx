@@ -440,10 +440,13 @@ function ArrivalSequence() {
   if (!visible) return null
 
   return (
-    <div className="arrival-sequence" aria-hidden="true">
+    <div className="arrival-sequence" role="region" aria-label="VELOR Private Estates opening sequence">
       <span className="arrival-sequence-wordmark">VELOR</span>
       <span className="arrival-sequence-descriptor">PRIVATE ESTATES</span>
       <span className="arrival-sequence-rule" />
+      <button className="arrival-sequence-skip" type="button" onClick={() => setVisible(false)}>
+        Skip intro
+      </button>
     </div>
   )
 }

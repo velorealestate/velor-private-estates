@@ -420,6 +420,9 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .arrival-sequence-wordmark { opacity: 0; transform: translateY(8px); color: var(--bronze); font-family: var(--serif); font-size: clamp(28px, 4vw, 44px); letter-spacing: .28em; animation: arrival-wordmark .75s .2s ease-out forwards; }
 .arrival-sequence-descriptor { margin-top: 8px; opacity: 0; color: rgba(234, 228, 217, .72); font-size: 8px; letter-spacing: .28em; animation: arrival-wordmark .6s .44s ease-out forwards; }
 .arrival-sequence-rule { width: 38px; height: 1px; margin-top: 26px; background: var(--bronze); transform: scaleX(0); transform-origin: center; animation: arrival-rule .45s .58s ease-out forwards; }
+.arrival-sequence-skip { position: absolute; right: clamp(18px, 4vw, 46px); bottom: clamp(18px, 4vw, 42px); min-height: 44px; padding: 0 14px; border: 1px solid rgba(234, 228, 217, .28); color: rgba(234, 228, 217, .74); background: transparent; cursor: pointer; font: inherit; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; pointer-events: auto; transition: color .2s ease, border-color .2s ease; }
+.arrival-sequence-skip:hover { border-color: var(--bronze); color: var(--ivory); }
+.arrival-sequence-skip:focus-visible { outline: 2px solid var(--bronze); outline-offset: 4px; }
 @keyframes arrival-wordmark { to { opacity: 1; transform: translateY(0); } }
 @keyframes arrival-rule { to { transform: scaleX(1); } }
 @keyframes arrival-exit { to { opacity: 0; visibility: hidden; } }
