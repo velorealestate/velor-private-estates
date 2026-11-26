@@ -15,7 +15,12 @@ const navigation = [
 function BrandWordmark({ light = true }: { light?: boolean }) {
   return (
     <span className={`brand-lockup${light ? ' brand-lockup-light' : ''}`}>
-      <span className="brand-name">Velor</span>
+      <span className="brand-name">
+        <span className="sr-only">Velor</span>
+        <span className="brand-name-letters" aria-hidden="true">
+          <span>V</span><span>e</span><span>l</span><span>o</span><span>r</span>
+        </span>
+      </span>
       <span className="brand-descriptor">PRIVATE ESTATES</span>
     </span>
   )
