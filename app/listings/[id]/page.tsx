@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, ArrowUpRight, Bath, BedDouble, Ruler } from 'lucide-react'
+import { JsonLd } from '@/components/json-ld'
 import { formatArea, formatListingPrice } from '@/lib/listings/format'
 import { getPublishedListing } from '@/lib/listings/queries'
+import { absoluteSiteUrl, resolvePublicImageUrl, SITE_NAME } from '@/lib/site'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,11 +16,34 @@ type PropertyPageProps = {
 export async function generateMetadata({ params }: PropertyPageProps): Promise<Metadata> {
   const { id } = await params
   const listing = await getPublishedListing(id)
-  if (!listing) return { title: 'Residence | VELOR Private Estates' }
+  if (!listing) {
+    return {
+      title: 'Residence not found',
+      robots: { index: false, follow: false },
+    }
+  }
+
+  const image = resolvePublicImageUrl(listing.coverImage)
+  const url = `/listings/${listing.id}`
 
   return {
-    title: `${listing.title} | VELOR Private Estates`,
+    title: listing.title,
     description: listing.summary,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'website',
+      url,
+      siteName: SITE_NAME,
+      title: listing.title,
+      description: listing.summary,
+      images: [{ url: image, alt: listing.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: listing.title,
+      description: listing.summary,
+      images: [image],
+    },
   }
 }
 
@@ -31,6 +56,27 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
 
   return (
     <main className="portal-theme public-property-detail">
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteSiteUrl('/') },
+              { '@type': 'ListItem', position: 2, name: 'Available Residences', item: absoluteSiteUrl('/listings') },
+              { '@type': 'ListItem', position: 3, name: listing.title, item: absoluteSiteUrl(`/listings/${listing.id}`) },
+            ],
+          },
+          {
+            '@type': 'Residence',
+            '@id': absoluteSiteUrl(`/listings/${listing.id}#residence`),
+            name: listing.title,
+            description: listing.summary,
+            url: absoluteSiteUrl(`/listings/${listing.id}`),
+            image: resolvePublicImageUrl(listing.coverImage),
+          },
+        ],
+      }} />
       <header className="public-directory-header">
         <Link className="portal-auth-brand" href="/" aria-label="VELOR Private Estates home">
           <span>VELOR</span><small>PRIVATE ESTATES</small>

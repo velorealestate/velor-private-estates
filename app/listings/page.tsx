@@ -1,14 +1,31 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
+import { JsonLd } from '@/components/json-ld'
 import { PropertyCard } from '@/components/listings/property-card'
 import { getPublishedListings } from '@/lib/listings/queries'
+import { absoluteSiteUrl, resolvePublicImageUrl, SITE_NAME } from '@/lib/site'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Available Residences | VELOR Private Estates',
-  description: 'Explore the residences currently published by VELOR Private Estates.',
+  title: 'Available Residences',
+  description: 'Explore exceptional residences currently published by VELOR Private Estates. Only properties in this public directory are represented as available listings.',
+  alternates: { canonical: '/listings' },
+  openGraph: {
+    type: 'website',
+    url: '/listings',
+    siteName: SITE_NAME,
+    title: 'Available Residences',
+    description: 'Explore exceptional residences currently published by VELOR Private Estates.',
+    images: [{ url: resolvePublicImageUrl(null), alt: 'A private residence framed by a landscaped courtyard.' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Available Residences',
+    description: 'Explore exceptional residences currently published by VELOR Private Estates.',
+    images: [resolvePublicImageUrl(null)],
+  },
 }
 
 export default async function PublicListingsPage() {
@@ -16,6 +33,23 @@ export default async function PublicListingsPage() {
 
   return (
     <main className="portal-theme public-directory">
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'Available Residences',
+        url: absoluteSiteUrl('/listings'),
+        isPartOf: { '@id': absoluteSiteUrl('/#website') },
+        mainEntity: {
+          '@type': 'ItemList',
+          numberOfItems: listings.length,
+          itemListElement: listings.map((listing, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: listing.title,
+            url: absoluteSiteUrl(`/listings/${listing.id}`),
+          })),
+        },
+      }} />
       <header className="public-directory-header">
         <Link className="portal-auth-brand" href="/" aria-label="VELOR Private Estates home">
           <span>VELOR</span><small>PRIVATE ESTATES</small>
